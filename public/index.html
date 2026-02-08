@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProposeHub • Will You Be Mine?</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aws-sdk/2.1692.0/aws-sdk.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="bg-gradient-to-br from-pink-50 to-rose-100 dark:from-gray-900 dark:to-black min-h-screen">
+
+  <div id="hearts-bg" class="fixed inset-0 pointer-events-none z-0"></div>
+
+  <!-- Fixed Header -->
+  <header class="fixed top-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-md z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-3xl">💍</span>
+        <h1 class="text-2xl font-bold text-rose-600 dark:text-rose-400">ProposeHub</h1>
+      </div>
+      <button id="sidebar-btn" class="text-2xl md:hidden"><i class="fas fa-bars"></i></button>
+    </div>
+  </header>
+
+  <div class="flex pt-16">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed md:static inset-y-0 left-0 w-72 bg-white dark:bg-gray-900 shadow-2xl transform -translate-x-full md:translate-x-0 transition-transform duration-300 z-50 overflow-y-auto">
+      <div class="p-6">
+        <h2 class="text-xl font-semibold mb-6 text-rose-600">Menu</h2>
+        <ul class="space-y-4">
+          <li><a href="#" onclick="loadProposals()" class="flex items-center gap-3 text-lg hover:text-rose-600"><i class="fas fa-home"></i> All Proposals</a></li>
+          <li><a href="#" onclick="showTrending()" class="flex items-center gap-3 text-lg hover:text-rose-600"><i class="fas fa-fire"></i> Trending</a></li>
+          <li><a href="#" onclick="playMotivationVideo()" class="flex items-center gap-3 text-lg hover:text-rose-600"><i class="fas fa-play-circle"></i> Motivation Video</a></li>
+          <li><a href="#" class="flex items-center gap-3 text-lg hover:text-rose-600"><i class="fas fa-heart"></i> My Proposals</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">
+      <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-8 mb-10">
+        <h2 class="text-3xl font-bold text-center mb-6 text-rose-600">Send Your Proposal</h2>
+        <div class="grid md:grid-cols-3 gap-4">
+          <select id="style" class="p-4 rounded-2xl border border-rose-200 focus:border-rose-500">
+            <option value="romantic">Romantic ❤️</option>
+            <option value="cute">Cute 🥰</option>
+            <option value="funny">Funny 😂</option>
+            <option value="bold">Bold 🔥</option>
+            <option value="poetic">Poetic ✨</option>
+          </select>
+          <textarea id="message" rows="3" placeholder="Write your beautiful proposal..." class="p-4 rounded-2xl border border-rose-200 focus:border-rose-500"></textarea>
+          <div>
+            <input type="text" id="name" placeholder="Your name" class="p-4 rounded-2xl border border-rose-200 focus:border-rose-500 w-full mb-4" />
+            <button onclick="addProposal()" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold py-4 rounded-2xl transition-all active:scale-95">
+              Send Proposal 💌
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex gap-4 mb-6">
+        <input id="search" type="text" placeholder="Search proposals..." class="flex-1 p-4 rounded-2xl border border-rose-200 focus:border-rose-500" onkeyup="filterProposals()">
+      </div>
+
+      <div id="wall" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </main>
+  </div>
+
+  <!-- Fixed Footer -->
+  <footer class="fixed bottom-0 left-0 right-0 bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg border-t border-rose-200 py-4 z-50">
+    <div class="max-w-7xl mx-auto px-6 text-center text-sm text-gray-600 dark:text-gray-400">
+      Made with by <strong>Khurram Rashid</strong> • Powered by AWS
+    </div>
+  </footer>
+
+  <!-- Download Card Modal -->
+  <div id="download-modal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-[100]">
+    <div class="bg-white dark:bg-gray-800 rounded-3xl p-8 max-w-md w-full mx-4">
+      <h3 class="text-2xl font-bold mb-6 text-rose-600">Create Beautiful Card</h3>
+      <input id="from-name" type="text" placeholder="From (Your Name)" class="w-full p-4 rounded-2xl border mb-4" />
+      <input id="to-name" type="text" placeholder="To (Their Name)" class="w-full p-4 rounded-2xl border mb-6" />
+      <div class="flex gap-3">
+        <button onclick="closeModal()" class="flex-1 py-4 rounded-2xl border">Cancel</button>
+        <button onclick="generateAndDownloadCard()" class="flex-1 bg-rose-600 text-white py-4 rounded-2xl font-bold">Download as JPG</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Motivation Video Modal -->
+  <div id="video-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center z-[110]">
+    <div class="bg-white dark:bg-gray-900 rounded-3xl overflow-hidden max-w-2xl w-full mx-4">
+      <div class="flex justify-between items-center p-4 border-b">
+        <h3 class="text-xl font-semibold text-rose-600">💖 Motivation Video</h3>
+        <button onclick="closeVideoModal()" class="text-3xl text-gray-500 hover:text-red-500">×</button>
+      </div>
+      <div class="aspect-video">
+        <iframe id="youtube-video" width="100%" height="100%" 
+                src="https://www.youtube.com/embed/GxGD74vWprA" 
+                title="Motivation Video" frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
