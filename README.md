@@ -4,6 +4,8 @@
 
 Share your heartfelt (or funny) proposals with the world, download them as elegant cards, and enjoy trending educational & sarcastic proposals from science & maths!
 
+<img width="1892" height="814" alt="image" src="https://github.com/user-attachments/assets/5d04878a-9b3c-4e3b-840d-b44121580c35" />
+
 ---
 
 ## 🚀 Live Demo
