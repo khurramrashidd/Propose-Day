@@ -4,8 +4,6 @@
 
 Share your heartfelt (or funny) proposals with the world, download them as elegant cards, and enjoy trending educational & sarcastic proposals from science & maths!
 
-![ProposeHub Preview](https://via.placeholder.com/800x400/ffe4e6/881337?text=ProposeHub+Preview)
-
 ---
 
 ## 🚀 Live Demo
